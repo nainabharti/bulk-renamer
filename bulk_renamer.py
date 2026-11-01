@@ -8,6 +8,17 @@ if folder_path.exists():
     if folder_path.is_dir():
         print("BULK RENAMER")
         print("Folder found successfully!")
+        # Collect all files
+        files = []
+        for item in folder_path.iterdir():
+            if item.is_file():
+                files.append(item)
+        #Display collected files
+        print("\nFiles found:")
+        for file in files:
+            print(file.name)
+        #Display total number of files
+        print(f"\nTotal files found: {len(files)}")
     else:
         print("Error: The given path is not a directory!")
 else:
