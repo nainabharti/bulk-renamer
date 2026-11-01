@@ -19,6 +19,32 @@ if folder_path.exists():
             print(file.name)
         #Display total number of files
         print(f"\nTotal files found: {len(files)}")
+        #Get custom naming options
+        print("\n---CUSTOM NAMING OPTIONS---")
+        #Get prefix
+        while True:
+            prefix = input("Enter a prefix: ").strip()
+            if prefix:
+                break
+            else:
+                print("Prefix cannot be empty. Try again.")
+        #Get starting number
+        while True:
+            start_number = input("Enter starting number: ").strip()
+            if start_number.isdigit():
+                start_number = int(start_number)
+                break
+            else:
+                print("Please enter a valid positive number .")
+        #Get separator
+        separator = input("Enter separator (e.g. _ or -): ")
+        #Display selected options
+
+        print("\n--- YOUR NAMING OPTIONS ---")
+        print(f"Prefix: {prefix}")
+        print(f"Starting number: {start_number}")
+        print(f"Separator: {separator}")
+        print("\nNaming options saved successfully!")
     else:
         print("Error: The given path is not a directory!")
 else:
