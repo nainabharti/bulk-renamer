@@ -112,14 +112,20 @@ if folder_path.exists():
                     print("\nNo files were renamed.")
 
                 else:
-                    # Step 8: Rename files with error handling
+                    # Step 10: Initialize counters
+                    success_count = 0
+                    failed_count = 0
+
                     print("\nStarting file renaming...")
 
+                    # Step 8: Rename files with error handling
                     for old_file, destination_path in zip(
                         files, destination_paths
                     ):
                         try:
                             old_file.rename(destination_path)
+
+                            success_count += 1
 
                             print(
                                 f"{old_file.name} renamed to "
@@ -127,10 +133,25 @@ if folder_path.exists():
                             )
 
                         except OSError as error:
+                            failed_count += 1
+
                             print(
                                 f"Could not rename {old_file.name}: "
                                 f"{error}"
                             )
+
+                    # Step 10: Display final summary
+                    total_files = success_count + failed_count
+
+                    print("\n--- RENAMING SUMMARY ---")
+                    print(f"Total files processed: {total_files}")
+                    print(f"Successfully renamed: {success_count}")
+                    print(f"Failed: {failed_count}")
+
+                    if failed_count == 0:
+                        print("\nRenaming operation completed successfully!")
+                    else:
+                        print("\nRenaming operation completed with errors.")
 
             else:
                 print("\nRenaming cancelled!")
