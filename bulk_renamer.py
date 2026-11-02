@@ -57,6 +57,17 @@ if folder_path.exists():
         print("\n--- FILE RENAMING PREVIEW ---")
         for old_file, new_file in zip(files, new_names):
             print(f"{old_file.name} -> {new_file}")
+        #ask for user confirmation
+        while True:
+            choice = input("\nDo you want to rename these files? (yes/no): ").strip().lower()
+            if choice == "yes":
+                print("\nConfirmation received!")
+                break
+            elif choice == "no":
+                print("Renaming cancelled.")
+                break
+            else:
+                print("Invalid choice. Please enter yes or no.")
     else:
         print("Error: The given path is not a directory!")
 else:
