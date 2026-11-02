@@ -7,11 +7,17 @@ current_file = Path(__file__)
 folder_path = current_file.parent / "test_files"
 
 # Step 3: Validate the folder path
-if folder_path.exists():
-    if folder_path.is_dir():
-        print("BULK RENAMER")
-        print("\nFolder found successfully!")
+if not folder_path.exists():
+    print("Error: Folder does not exist!")
 
+elif not folder_path.is_dir():
+    print("Error: The given path is not a directory!")
+
+else:
+    print("BULK RENAMER")
+    print("\nFolder found successfully!")
+
+    try:
         # Step 4: Collect all files
         files = []
 
@@ -33,24 +39,43 @@ if folder_path.exists():
             # Step 5: Get custom naming options
             print("\n--- CUSTOM NAMING OPTIONS ---")
 
+            invalid_chars = '<>:"/\\|?*'
+
+            # Validate prefix
             while True:
                 prefix = input("Enter a prefix: ").strip()
 
-                if prefix:
-                    break
-                else:
-                    print("Prefix cannot be empty. Try again.")
+                if not prefix:
+                    print("Prefix cannot be empty!")
 
+                elif any(char in invalid_chars for char in prefix):
+                    print("Prefix contains invalid filename characters!")
+
+                else:
+                    break
+
+            # Validate starting number
             while True:
                 start_number = input("Enter starting number: ").strip()
 
                 if start_number.isdigit():
                     start_number = int(start_number)
                     break
-                else:
-                    print("Please enter a valid positive number.")
 
-            separator = input("Enter separator (e.g. _ or -): ")
+                else:
+                    print("Please enter a valid positive number!")
+
+            # Validate separator
+            while True:
+                separator = input(
+                    "Enter separator (_ or - or leave empty): "
+                )
+
+                if separator in ("", "_", "-"):
+                    break
+
+                else:
+                    print("Please enter only _, -, or leave it empty!")
 
             print("\nNaming options saved successfully!")
 
@@ -80,11 +105,14 @@ if folder_path.exists():
 
                 if choice in ("yes", "no"):
                     break
+
                 else:
                     print("Invalid choice. Please enter yes or no.")
 
-            if choice == "yes":
+            if choice == "no":
+                print("\nRenaming cancelled!")
 
+            else:
                 # Step 9: Check for filename conflicts
                 destination_paths = []
 
@@ -94,8 +122,25 @@ if folder_path.exists():
 
                 conflicts = []
 
+                # Identify files that need no renaming
+                files_to_rename = []
+
+                for old_file, destination_path in zip(
+                    files, destination_paths
+                ):
+                    if old_file == destination_path:
+                        print(
+                            f"\nSkipping {old_file.name}: "
+                            "It already has the intended name."
+                        )
+
+                    else:
+                        files_to_rename.append(
+                            (old_file, destination_path)
+                        )
+
                 # Check whether destination files already exist
-                for destination_path in destination_paths:
+                for old_file, destination_path in files_to_rename:
                     if destination_path.exists():
                         conflicts.append(destination_path.name)
 
@@ -111,6 +156,9 @@ if folder_path.exists():
 
                     print("\nNo files were renamed.")
 
+                elif not files_to_rename:
+                    print("\nAll files already have their intended names.")
+
                 else:
                     # Step 10: Initialize counters
                     success_count = 0
@@ -119,9 +167,7 @@ if folder_path.exists():
                     print("\nStarting file renaming...")
 
                     # Step 8: Rename files with error handling
-                    for old_file, destination_path in zip(
-                        files, destination_paths
-                    ):
+                    for old_file, destination_path in files_to_rename:
                         try:
                             old_file.rename(destination_path)
 
@@ -149,15 +195,17 @@ if folder_path.exists():
                     print(f"Failed: {failed_count}")
 
                     if failed_count == 0:
-                        print("\nRenaming operation completed successfully!")
+                        print(
+                            "\nRenaming operation completed successfully!"
+                        )
+
                     else:
-                        print("\nRenaming operation completed with errors.")
+                        print(
+                            "\nRenaming operation completed with errors."
+                        )
 
-            else:
-                print("\nRenaming cancelled!")
+    except PermissionError:
+        print("Error: Permission denied while accessing the folder!")
 
-    else:
-        print("Error: The given path is not a directory!")
-
-else:
-    print("Error: Folder does not exist!")
+    except OSError as error:
+        print(f"Folder access error: {error}")
