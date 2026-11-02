@@ -68,6 +68,18 @@ if folder_path.exists():
                 break
             else:
                 print("Invalid choice. Please enter yes or no.")
+        #Rename files
+        if choice == "yes":
+            for old_file, new_file in zip(files, new_names):
+                #create the destination path
+                new_file_path = folder_path / new_file
+                #check whether the destination already exists
+                if new_file_path.exists():
+                    print(f"Error: {new_file} already exists!")
+                    continue
+                #Rename the original file
+                old_file.rename(new_file_path)
+                print(f"{old_file.name} renamed to {new_file}")
     else:
         print("Error: The given path is not a directory!")
 else:
