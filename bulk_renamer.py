@@ -39,12 +39,24 @@ if folder_path.exists():
         #Get separator
         separator = input("Enter separator (e.g. _ or -): ")
         #Display selected options
-
         print("\n--- YOUR NAMING OPTIONS ---")
         print(f"Prefix: {prefix}")
         print(f"Starting number: {start_number}")
         print(f"Separator: {separator}")
         print("\nNaming options saved successfully!")
+        #generate new filenames
+        new_names = []
+        for index, file in enumerate(files):
+            #generate the new number
+            number = start_number + index
+            #generate new filename
+            new_name = f"{prefix}{separator}{number}{file.suffix}"
+            #store new filename 
+            new_names.append(new_name)
+        #display filename preview
+        print("\n--- FILE RENAMING PREVIEW ---")
+        for old_file, new_file in zip(files, new_names):
+            print(f"{old_file.name} -> {new_file}")
     else:
         print("Error: The given path is not a directory!")
 else:
